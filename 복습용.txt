@@ -1,0 +1,453 @@
+
+class Node2{
+	private int num;
+	
+	public Node2(int num) {
+		this.num = num;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
+	@Override
+	public String toString() {
+		return  num + "\t";
+	}
+	
+	
+}
+
+class Game1to50{
+	private ArrayList<ArrayList<Node2>> list;
+	private Scanner sc;
+	private int hint;
+	private int gameNum;
+	// int[] front = new int[25];
+	// int[] back = new int[25];
+	// int[][] list = {front, back};
+	
+	
+	private final int SIZE = 25;
+	
+	public Game1to50() {
+		sc = new Scanner(System.in);
+		gameNum+=1;
+		list = new ArrayList<ArrayList<Node2>>();
+		init();
+	}
+	
+	private void init() {
+		list.add(dataInit(1)); // 1~25
+		list.add(dataInit(SIZE+1)); // 26~50
+		suffleData(list.get(0));
+		suffleData(list.get(1));
+	}
+	
+	private ArrayList<Node2> dataInit(int num){
+		ArrayList<Node2> data = new ArrayList<Node2>();
+		for(int i =0; i < SIZE;i+=1) {
+			data.add(new Node2(num++));
+		}
+		return data;
+	}
+	
+	private void suffleData(ArrayList<Node2> data) {
+		Random rd = new Random();
+		for(int i =0; i < 1000;i+=1) {
+			int r = rd.nextInt(SIZE);
+			Node2 temp = data.get(0);
+			data.set(0, data.get(r));
+			data.set(r, temp);
+		}
+	}
+	
+	private void printNodeList() {
+		for(int i =0; i < SIZE; i+=1) {
+			if(gameNum == list.get(0).get(i).getNum()) {
+				hint = i;
+			}
+			System.out.print(list.get(0).get(i));
+			
+			if(i%5 == 4) {
+				System.out.println();
+			}
+		}
+	}
+	
+	public void run() {
+		while(true) {
+			printNodeList();
+			if(gameNum > SIZE*2) {
+				System.out.println("게임 종료");
+				sc.close();
+				return;
+			}
+			
+			System.out.printf("[%d]의 위치 선택 1~25" , gameNum);
+			System.out.println("힌트 : " + (hint+1));
+			
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int idx = hint;
+			if(list.get(0).get(idx).getNum() == gameNum) {
+				if(gameNum <= SIZE) {
+					list.get(0).set(idx, list.get(1).get(idx));
+				}else {
+					list.get(0).get(idx).setNum(0);
+				}
+				gameNum+=1;
+			}
+			
+		}
+	}
+	
+}
+
+public class _08게임1to50 {
+
+	public static void main(String[] args) {
+		Game1to50 game = new Game1to50();
+		game.run();
+	}
+}
+
+
+//----------------
+		ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+		int size = 3;
+		int num = 1;
+		for(int i =0; i < size;i+=1) {
+			list.add(new ArrayList<Integer>());
+			for(int k =0; k < size;k+=1) {
+				list.get(i).add(num++);
+			}
+		}
+		
+		for(int i =0; i < size;i+=1) {
+			for(int k =0; k < size; k+=1) {
+				System.out.print(list.get(i).get(k)+" ");
+			}
+			System.out.println();
+		}
+		
+//----------
+class Node1 {
+	private String front;
+	private String back;
+
+	public Node1(String front) {
+		this.front = front;
+	}
+
+	public String getFront() {
+		return front;
+	}
+
+	public void setFront(String front) {
+		this.front = front;
+	}
+
+	public String getBack() {
+		return back;
+	}
+
+	public void setBack(String back) {
+		this.back = back;
+	}
+
+	@Override
+	public String toString() {
+		return front + " ";
+	}
+
+}
+
+// 접근 제어자는 클래스,메서드,멤버변수(<->지역변수)에만 붙일 수 있다. 
+class MemoryGame {
+	private ArrayList<Node1> list;
+	final private int SIZE;
+	private Scanner sc;
+	private int cnt;
+
+	public MemoryGame(int size) {
+		this.SIZE = size;
+		list = new ArrayList<Node1>();
+		sc = new Scanner(System.in);
+	}
+
+	private void init() {
+		String data[] = { "🐴", "🦄", "🐹 ", "🌸", "🐠" };
+		int idx = -1;
+		for (int i = 0; i < SIZE; i += 1) {
+			if (i % 2 == 0)
+				idx += 1;
+			Node1 node = new Node1(data[idx]);
+			list.add(node);
+
+		}
+	}
+
+	private void printFront() {
+		for (int i = 1; i <= 10; i += 1) {
+			System.out.print(i + "  ");
+		}
+		System.out.println();
+
+		for (Node1 n : list) {
+			System.out.print(n);
+		}
+		System.out.println();
+	}
+
+	private void suffle() {
+		Random rd = new Random();
+		for (int i = 0; i < 1000; i += 1) {
+			int rn = rd.nextInt(SIZE);
+			Node1 node = list.get(0);
+			list.set(0, list.get(rn));
+			list.set(rn, node);
+		}
+
+	}
+
+	private int getValue(String msg) {
+		System.out.println(msg + " >>");
+		while (true) {
+			int num = sc.nextInt();
+			if (num < 1 || num > SIZE) {
+				System.out.println(" 다시 입력");
+				continue;
+			}
+			return num;
+		}
+	}
+
+	private void printBack() {
+		for (Node1 n : list) {
+			System.out.print(n.getBack() == null ? "[ ]" : "[" + n.getBack() + "]");
+		}
+		System.out.println();
+	}
+
+	private void play() {
+		while (true) {
+			if (cnt == SIZE / 2) {
+				System.out.println("게임 종료");
+				return;
+			}
+			int idx1 = getValue("카드1 선택(1-10)") - 1;
+			int idx2 = getValue("카드2 선택(1-10)") - 1;
+			if (idx1 == idx2) {
+				System.out.println("다른 카드 선택");
+				continue;
+			}
+			if (list.get(idx1).getBack() != null || list.get(idx2).getBack() != null) {
+				System.out.println("이미 선택된 카드");
+				continue;
+			}
+
+			list.get(idx1).setBack(list.get(idx1).getFront());
+			list.get(idx2).setBack(list.get(idx2).getFront());
+			printBack();
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			if (list.get(idx1).getBack().equals(list.get(idx2).getBack())) {
+				cnt += 1;
+			} else {
+				list.get(idx1).setBack(null);
+				list.get(idx2).setBack(null);
+			}
+
+		}
+	}
+
+	public void run() {
+		init();
+		suffle();
+		printFront();
+		play();
+		sc.close();
+
+	}
+}
+
+public class _05기억력게임 {
+
+	public static void main(String[] args) {
+
+		MemoryGame game = new MemoryGame(10);
+		game.run(); // 나머지 메서드나 변수는 보이지 않는다
+
+	}
+
+}
+
+//========
+
+class Manager {
+	private ArrayList<Member> memberList = new ArrayList<Member>();
+	private ArrayList<Money> moneyList = new ArrayList<Money>();
+
+	public void init() {
+		memberList.add(new Member(100001, "김행복", "010-1111-2222", "SK", "20151202", "A", "01"));
+		memberList.add(new Member(100002, "이축복", "010-1111-3333", "SK", "20151206", "B", "01"));
+		memberList.add(new Member(100003, "장믿음", "010-1111-4444", "SK", "20151001", "B", "30"));
+		memberList.add(new Member(100004, "최사랑", "010-1111-5555", "SK", "20151113", "A", "30"));
+		memberList.add(new Member(100005, "진평화", "010-1111-6666", "SK", "20151225", "B", "60"));
+		memberList.add(new Member(100006, "차공단", "010-1111-7777", "SK", "20151211", "C", "60"));
+
+		moneyList.add(new Money(100001, 20160001, 500, 5, 2500, "A001", "20160101"));
+		moneyList.add(new Money(100001, 20160002, 1000, 4, 4000, "A002", "20160101"));
+		moneyList.add(new Money(100001, 20160003, 500, 3, 1500, "A008", "20160101"));
+		moneyList.add(new Money(100002, 20160004, 2000, 1, 2000, "A004", "20160102"));
+		moneyList.add(new Money(100002, 20160005, 500, 1, 500, "A001", "20160103"));
+		moneyList.add(new Money(100003, 20160006, 1500, 2, 3000, "A003", "20160103"));
+		moneyList.add(new Money(100004, 20160007, 500, 2, 1000, "A001", "20160104"));
+		moneyList.add(new Money(100004, 20160008, 300, 1, 300, "A005", "20160104"));
+		moneyList.add(new Money(100004, 20160009, 600, 1, 600, "A006", "20160104"));
+		moneyList.add(new Money(100004, 20160010, 3000, 1, 3000, "A007", "20160106"));
+	}
+
+	void quiz() {
+		ArrayList<Total> list = new ArrayList<Total>();
+		for (Member member : memberList) {
+			Total t = new Total(member.getCustno(), member.getCustname());
+			int sum = 0;
+			for (Money money : moneyList) {
+				if (member.getCustno() == money.getCustno()) {
+					sum += money.getPrice();
+				}
+			}
+			t.setSum(sum);
+			list.add(t);
+		}
+
+		for (int i = 0; i < list.size(); i += 1) {
+			int maxSum = list.get(i).getSum();
+			for (int k = i; k < list.size(); k += 1) {
+				if (maxSum < list.get(k).getSum()) {
+					maxSum = list.get(k).getSum();
+					Total temp = list.get(i);
+					list.set(i, list.get(k));
+					list.set(k, temp);
+				}
+			}
+		}
+
+		for (Total t : list) {
+			if (t.getSum() > 0) {
+				System.out.println(t);
+				System.out.println("------------");
+			}
+
+		}
+	}
+}
+
+class Total {
+	private int custNo;
+	private String custName;
+	private int sum;
+
+	public Total(int custNo, String custName) {
+		this.custNo = custNo;
+		this.custName = custName;
+	}
+
+	void setSum(int sum) {
+		this.sum = sum;
+	}
+
+	int getSum() {
+		return this.sum;
+	}
+
+	@Override
+	public String toString() {
+		return custNo + "\t" + custName + "\t" + sum;
+	}
+
+}
+
+//-------
+/*
+class Member {
+	private int custno;				// 회원번호
+	private String custname;		// 회원성명
+	private String phone;			// 회원전화
+	private String address;			// 통신사
+	private String joindate;		// 가입일자
+	private String grade;			// 고객등급
+	private String city;			// 거주도시
+	
+	public Member(int custno, String custname, String phone, String address, String joindate, String grade, String city) {
+		this.custno = custno;
+		this.custname = custname;
+		this.phone = phone;
+		this.address = address;
+		this.joindate = joindate;
+		this.grade = grade;
+		this.city = city;
+	}
+}
+
+class Money{
+	 private int custno;			// 회원번호
+	 private int saleno; 			// 판매번호
+	 private int pcost;				// 단가
+	 private int amount;			// 수량
+	 private int price;				// 가격(매출)
+	 private String pcode;			// 상품코드
+	 private String sdate;			// 판매일자
+	 public Money() {}
+	 
+	 public Money(int custno, int saleno, int pcost, int amount, int price, String pcode, String sdate) {
+		this.custno = custno;
+		this.saleno = saleno;
+		this.pcost = pcost;
+		this.amount = amount;
+		this.price = price;
+		this.pcode = pcode;
+		this.sdate = sdate;
+	}
+}
+
+class Manager{
+	private Vector<Member> memberList = new Vector<Member>();
+	private Vector<Money> moneyList = new Vector<Money>(); 	
+	
+	public void init() {
+		memberList.add(new Member(100001, "김행복", "010-1111-2222", "SK", "20151202", "A", "01"));
+		memberList.add(new Member(100002, "이축복", "010-1111-3333", "SK", "20151206", "B", "01"));
+		memberList.add(new Member(100003, "장믿음", "010-1111-4444", "SK", "20151001", "B", "30"));
+		memberList.add(new Member(100004, "최사랑", "010-1111-5555", "SK", "20151113", "A", "30"));
+		memberList.add(new Member(100005, "진평화", "010-1111-6666", "SK", "20151225", "B", "60"));
+		memberList.add(new Member(100006, "차공단", "010-1111-7777", "SK", "20151211", "C", "60"));
+		
+		moneyList.add(new Money(100001, 20160001, 500, 5, 2500, "A001", "20160101"));
+		moneyList.add(new Money(100001, 20160002, 1000, 4, 4000, "A002", "20160101"));
+		moneyList.add(new Money(100001, 20160003, 500, 3, 1500, "A008", "20160101"));
+		moneyList.add(new Money(100002, 20160004, 2000, 1, 2000, "A004", "20160102"));
+		moneyList.add(new Money(100002, 20160005, 500, 1, 500, "A001", "20160103"));
+		moneyList.add(new Money(100003, 20160006, 1500, 2, 3000, "A003", "20160103"));
+		moneyList.add(new Money(100004, 20160007, 500, 2, 1000, "A001", "20160104"));
+		moneyList.add(new Money(100004, 20160008, 300, 1, 300, "A005", "20160104"));
+		moneyList.add(new Money(100004, 20160009, 600, 1, 600, "A006", "20160104"));
+		moneyList.add(new Money(100004, 20160010, 3000, 1, 3000, "A007", "20160106"));
+	}
+	
+}
+*/
